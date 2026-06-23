@@ -15,6 +15,19 @@
     --font-mono: 'JetBrains Mono', monospace;
 }
 
+body.light-mode {
+    --bg-deep: #f2f2f7;
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(0, 0, 0, 0.1);
+    --text-main: #1c1c1e;
+    --text-muted: #636366;
+    --neon-red: #ff3b30;
+    --neon-red-glow: rgba(255, 59, 48, 0.3);
+    --neon-orange: #ff9500;
+    --neon-orange-glow: rgba(255, 149, 0, 0.3);
+    --neon-green: #34c759;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -460,3 +473,21 @@ body {
     color: var(--text-main);
 }
 .mt-2 { margin-top: 10px; }
+
+/* Theme Button */
+.btn-theme {
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+}
+.nav-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}

@@ -193,6 +193,18 @@ if (btnTemp) {
     });
 }
 
+const btnTheme = document.getElementById('btn-theme');
+if (btnTheme) {
+    btnTheme.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        if (document.body.classList.contains('light-mode')) {
+            btnTheme.innerText = '🌙 DARK MODE';
+        } else {
+            btnTheme.innerText = '☀️ LIGHT MODE';
+        }
+    });
+}
+
 // Fetch every second
 setInterval(fetchStats, 1000);
 fetchStats();
