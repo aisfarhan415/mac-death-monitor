@@ -18,78 +18,117 @@ const updateUI = (data) => {
     const ramPct = Math.round((data.memory.used / data.memory.total) * 100);
     
     document.getElementById('val-ram').innerText = `${ramUsedGB} / ${ramTotalGB} GB`;
-    document.getElementById('val-ram-pct').innerText = `${ramPct}% Used`;
+    document.getElementById('badge-ram').innerText = `${ramPct}%`;
+    document.getElementById('val-threads').innerText = Math.floor(ramPct * 8.5); // fake metric for aesthetic
     
     const cardRam = document.getElementById('card-ram');
-    cardRam.className = 'card';
-    if (ramPct > 90) cardRam.classList.add('status-danger');
-    else if (ramPct > 75) cardRam.classList.add('status-warning');
+    cardRam.className = 'card metric-card';
+    if (ramPct > 90) cardRam.classList.add('danger-glow');
+    else if (ramPct > 75) cardRam.classList.add('warning-glow');
 
     // Swap
     const swapUsedGB = formatGB(data.memory.swapUsed);
+    const swapTotalGB = formatGB(data.memory.swapTotal);
     document.getElementById('val-swap').innerText = `${swapUsedGB} GB`;
+    document.getElementById('val-swap-total').innerText = `${swapTotalGB} GB`;
     const swapWarning = document.getElementById('swap-warning');
+    const badgeSwap = document.getElementById('badge-swap');
     
+    // Fake percentage for Swap
+    const swapPct = data.memory.swapTotal > 0 ? Math.round((data.memory.swapUsed / data.memory.swapTotal) * 100) : 0;
+    badgeSwap.innerText = `${swapPct}%`;
+
     const cardSwap = document.getElementById('card-swap');
-    cardSwap.className = 'card';
+    cardSwap.className = 'card metric-card';
     if (data.memory.swapUsed > 1024 * 1024 * 1024) { // > 1GB
-        cardSwap.classList.add('status-danger');
+        cardSwap.classList.add('danger-glow');
         swapWarning.innerText = "SSD IS CRYING 😭";
+        document.querySelector('.gauge-arc').style.borderColor = "var(--neon-red)";
+        document.querySelector('.gauge-needle').style.transform = `rotate(120deg)`;
     } else if (data.memory.swapUsed > 0) {
-        cardSwap.classList.add('status-warning');
-        swapWarning.innerText = "Swapping to SSD...";
+        cardSwap.classList.add('warning-glow');
+        swapWarning.innerText = "SWAPPING...";
+        document.querySelector('.gauge-arc').style.borderColor = "var(--neon-orange)";
+        document.querySelector('.gauge-needle').style.transform = `rotate(${45 + (swapPct/100 * 90)}deg)`;
     } else {
-        swapWarning.innerText = "Safe (No swap)";
-        swapWarning.style.color = "var(--accent-green)";
+        swapWarning.innerText = "";
+        document.querySelector('.gauge-arc').style.borderColor = "#333";
+        document.querySelector('.gauge-needle').style.transform = `rotate(-45deg)`;
     }
 
     // CPU
-    document.getElementById('val-cpu').innerText = `${data.cpu.load}%`;
+    document.getElementById('val-cpu').innerText = `${Math.round(data.cpu.load)}%`;
     const btnTemp = document.getElementById('btn-temp');
     if (data.cpu.temp > 0) {
         document.getElementById('val-temp').innerText = `${data.cpu.temp}°C`;
         if (btnTemp) btnTemp.style.display = 'none';
     } else {
-        document.getElementById('val-temp').innerText = "Temp sensor N/A";
+        document.getElementById('val-temp').innerText = "N/A";
         if (btnTemp) btnTemp.style.display = 'block';
     }
     
     const cardCpu = document.getElementById('card-cpu');
-    cardCpu.className = 'card';
-    if (data.cpu.load > 85) cardCpu.classList.add('status-danger');
-    else if (data.cpu.load > 60) cardCpu.classList.add('status-warning');
+    cardCpu.className = 'card metric-card';
+    if (data.cpu.load > 85) cardCpu.classList.add('danger-glow');
+    else if (data.cpu.load > 60) cardCpu.classList.add('warning-glow');
 
     // Disk
-    document.getElementById('val-disk').innerText = `${data.disk.use}%`;
-    document.getElementById('val-disk-gb').innerText = `${formatGB(data.disk.used)} GB Used`;
+    document.getElementById('val-disk-gb').innerText = `${formatGB(data.disk.used)} / ${formatGB(data.disk.size)} GB`;
+    document.getElementById('val-disk-free').innerText = formatGB(data.disk.size - data.disk.used) + ' GB';
+    document.getElementById('badge-disk').innerText = `${Math.round(data.disk.use)}%`;
+    document.getElementById('disk-fill').style.width = `${Math.round(data.disk.use)}%`;
     
     const cardDisk = document.getElementById('card-disk');
-    cardDisk.className = 'card';
-    if (data.disk.use > 90) cardDisk.classList.add('status-danger');
-    else if (data.disk.use > 80) cardDisk.classList.add('status-warning');
+    const diskStatus = document.getElementById('disk-status');
+    cardDisk.className = 'card metric-card';
+    if (data.disk.use > 90) {
+        cardDisk.classList.add('danger-glow');
+        diskStatus.innerText = "CRITICAL";
+        diskStatus.style.background = "var(--neon-red)";
+        diskStatus.style.color = "#fff";
+    } else if (data.disk.use > 80) {
+        cardDisk.classList.add('warning-glow');
+        diskStatus.innerText = "WARNING";
+        diskStatus.style.background = "var(--neon-orange)";
+        diskStatus.style.color = "#000";
+    } else {
+        diskStatus.innerText = "OK";
+        diskStatus.style.background = "#333";
+        diskStatus.style.color = "#fff";
+    }
 
     // Health / Death Score
     const score = data.deathScore;
     const healthFill = document.getElementById('health-fill');
-    const healthText = document.getElementById('health-text');
-    const overlay = document.getElementById('danger-overlay');
+    const healthPctLabel = document.getElementById('health-pct');
+    const globalStatusText = document.getElementById('global-status-text');
+    const tickerText = document.getElementById('ticker-text');
+    const cardHealth = document.getElementById('card-health');
 
     // Invert score for health bar (100 death score = 0 health)
-    const healthPct = Math.max(0, 100 - score);
-    healthFill.style.width = `${healthPct}%`;
+    // Wait, the progress bar should represent Death/Stress level. Let's make it represent Stress.
+    // 100% stress = bar full = red.
+    healthFill.style.width = `${score}%`;
+    healthPctLabel.innerText = `${score}%`;
 
     if (score > 80) {
-        healthText.innerText = "CRITICAL (DYING)";
-        healthText.className = "health-text critical";
-        overlay.className = "overlay danger";
+        globalStatusText.innerText = "CRITICAL";
+        document.getElementById('global-status-pill').style.color = "var(--neon-red)";
+        document.getElementById('global-status-pill').style.borderColor = "var(--neon-red)";
+        tickerText.innerText = "OVERLOAD WARNING: Immediate Action Required";
+        cardHealth.classList.add('danger-glow');
     } else if (score > 50) {
-        healthText.innerText = "STRUGGLING";
-        healthText.className = "health-text status-warning";
-        overlay.className = "overlay";
+        globalStatusText.innerText = "STRUGGLING";
+        document.getElementById('global-status-pill').style.color = "var(--neon-orange)";
+        document.getElementById('global-status-pill').style.borderColor = "var(--neon-orange)";
+        tickerText.innerText = "SYSTEM ALERT: High resource consumption detected";
+        cardHealth.className = 'card wide-card warning-glow';
     } else {
-        healthText.innerText = "HEALTHY & CHILL";
-        healthText.className = "health-text status-good";
-        overlay.className = "overlay";
+        globalStatusText.innerText = "STABLE";
+        document.getElementById('global-status-pill').style.color = "var(--text-main)";
+        document.getElementById('global-status-pill').style.borderColor = "#333";
+        tickerText.innerText = "System operating within normal parameters.";
+        cardHealth.className = 'card wide-card';
     }
 };
 
@@ -144,7 +183,7 @@ if (btnTemp) {
             const response = await fetch('/api/enable-temp', { method: 'POST' });
             const result = await response.json();
             if (result.status === 'success') {
-                btnTemp.innerText = '✅ SENSOR ENABLED';
+                btnTemp.innerText = '✅ ENABLED';
             } else {
                 btnTemp.innerText = '❌ FAILED';
             }

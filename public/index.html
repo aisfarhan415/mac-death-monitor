@@ -5,51 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MacBook Death Monitor</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="overlay" id="danger-overlay"></div>
+    <div class="background-grid"></div>
     <div class="container">
-        <header>
-            <h1>MacBook Death Monitor ☠️</h1>
-            <p>Real-time suffering metrics</p>
-            <button id="btn-optimize" class="btn-emergency">🛠️ EMERGENCY OPTIMIZE</button>
+        <!-- Header Section -->
+        <header class="top-nav">
+            <div class="logo-area">
+                <div class="skull-icon">☠️</div>
+                <h1>MacBook Death Monitor</h1>
+            </div>
+            <div class="status-pill" id="global-status-pill">
+                <span class="pulse-dot"></span> SYSTEM: <span id="global-status-text">ANALYZING</span>
+            </div>
         </header>
 
-        <section class="main-health">
-            <h2>System Health</h2>
-            <div class="progress-bar">
-                <div class="progress-fill" id="health-fill"></div>
+        <!-- Main Health Bar -->
+        <section class="card wide-card" id="card-health">
+            <div class="card-header">
+                <h2>CRITICAL HEALTH</h2>
+                <span class="health-pct" id="health-pct">--%</span>
             </div>
-            <p class="health-text" id="health-text">CRITICAL</p>
+            <div class="progress-track">
+                <div class="progress-fill" id="health-fill">
+                    <div class="glow-tip"></div>
+                </div>
+            </div>
+            <div class="progress-markers">
+                <span>0%</span>
+                <span>20%</span>
+                <span>40%</span>
+                <span class="timer-fake">0:00:00</span>
+                <span>60%</span>
+                <span>80%</span>
+                <span>100%</span>
+            </div>
         </section>
 
+        <!-- Metrics Grid -->
         <section class="metrics-grid">
-            <div class="card" id="card-ram">
-                <h3>RAM Usage</h3>
-                <div class="value" id="val-ram">-- GB</div>
-                <div class="sub-value" id="val-ram-pct">--%</div>
+            <!-- RAM -->
+            <div class="card metric-card" id="card-ram">
+                <div class="card-top">
+                    <h2>RAM Usage</h2>
+                    <span class="badge" id="badge-ram">--%</span>
+                </div>
+                <div class="value-large" id="val-ram">-- / -- GB</div>
+                <div class="chart-fake wave-red"></div>
+                <div class="card-footer">
+                    <span>Active Threads: <span id="val-threads">--</span></span>
+                </div>
             </div>
 
-            <div class="card" id="card-swap">
-                <h3>Swap Memory</h3>
-                <div class="value" id="val-swap">-- GB</div>
-                <div class="sub-value warning" id="swap-warning">SSD is crying</div>
+            <!-- Swap -->
+            <div class="card metric-card" id="card-swap">
+                <div class="card-top">
+                    <h2>Swap Memory</h2>
+                    <span class="badge warning" id="badge-swap">--%</span>
+                </div>
+                <div class="value-large" id="val-swap">-- GB Used</div>
+                <div class="gauge-fake">
+                    <div class="gauge-arc"></div>
+                    <div class="gauge-needle"></div>
+                </div>
+                <div class="card-footer">
+                    <span>Total Swap: <span id="val-swap-total">-- GB</span></span>
+                    <span class="critical-text" id="swap-warning"></span>
+                </div>
             </div>
 
-            <div class="card" id="card-cpu">
-                <h3>CPU Load</h3>
-                <div class="value" id="val-cpu">-- %</div>
-                <div class="sub-value" id="val-temp">-- °C</div>
-                <button id="btn-temp" class="btn-small">ENABLE SENSOR</button>
+            <!-- CPU -->
+            <div class="card metric-card" id="card-cpu">
+                <div class="card-top">
+                    <h2>CPU Load</h2>
+                </div>
+                <div class="cpu-split">
+                    <div class="cpu-left">
+                        <div class="value-huge" id="val-cpu">--%</div>
+                        <div class="cpu-sub">LOAD</div>
+                        <div class="temp-readout">Temp: <span id="val-temp">--°C</span></div>
+                    </div>
+                    <div class="cpu-right">
+                        <div class="bars-fake">
+                            <div class="bar h-80"></div>
+                            <div class="bar h-40"></div>
+                            <div class="bar h-90"></div>
+                            <div class="bar h-20"></div>
+                            <div class="bar h-100"></div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn-temp" class="btn-action mt-2">ENABLE SENSOR</button>
             </div>
 
-            <div class="card" id="card-disk">
-                <h3>Disk Fullness</h3>
-                <div class="value" id="val-disk">-- %</div>
-                <div class="sub-value" id="val-disk-gb">-- GB Used</div>
+            <!-- Disk -->
+            <div class="card metric-card" id="card-disk">
+                <div class="card-top">
+                    <h2>Disk Fullness</h2>
+                    <span class="badge" id="badge-disk">--%</span>
+                </div>
+                <div class="value-large" id="val-disk-gb">-- GB / -- GB</div>
+                <div class="mini-progress">
+                    <div class="mini-fill" id="disk-fill"></div>
+                </div>
+                <div class="card-footer space-between">
+                    <span>Free: <span id="val-disk-free">-- GB</span></span>
+                    <span class="badge solid-warning" id="disk-status">WARNING</span>
+                </div>
             </div>
         </section>
+
+        <footer class="bottom-action">
+            <div class="warning-ticker">
+                <span class="icon">⚠️</span> <span id="ticker-text">OVERLOAD WARNING: Immediate Action Required</span>
+            </div>
+            <button id="btn-optimize" class="btn-emergency">🛠️ EMERGENCY OPTIMIZE</button>
+        </footer>
     </div>
 
     <script src="script.js"></script>
