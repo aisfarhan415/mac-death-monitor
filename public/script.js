@@ -121,16 +121,24 @@ document.getElementById('btn-optimize').addEventListener('click', async () => {
             }, 3000);
         } else {
             btn.innerText = '❌ FAILED';
+            setTimeout(() => {
+                btn.innerText = '🛠️ EMERGENCY OPTIMIZE';
+                btn.style.pointerEvents = 'auto';
+            }, 3000);
         }
     } catch (error) {
         btn.innerText = '❌ ERROR';
+        setTimeout(() => {
+            btn.innerText = '🛠️ EMERGENCY OPTIMIZE';
+            btn.style.pointerEvents = 'auto';
+        }, 3000);
     }
 });
 
 const btnTemp = document.getElementById('btn-temp');
 if (btnTemp) {
     btnTemp.addEventListener('click', async () => {
-        btnTemp.innerText = 'WAITING FOR TOUCH ID...';
+        btnTemp.innerText = '⚙️ ACTIVATING...';
         btnTemp.style.pointerEvents = 'none';
         try {
             const response = await fetch('/api/enable-temp', { method: 'POST' });

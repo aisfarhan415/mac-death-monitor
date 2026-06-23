@@ -80,8 +80,8 @@ app.get('/api/stats', async (req, res) => {
 });
 
 app.post('/api/optimize', (req, res) => {
-    // Run purge using AppleScript so it prompts the user for Touch ID / Password natively
-    exec('osascript -e \'do shell script "purge" with administrator privileges\'', (error, stdout, stderr) => {
+    // Run 'sudo purge' directly now that password is bypassed
+    exec('sudo purge', (error, stdout, stderr) => {
         if (error) {
             console.error(`Purge error: ${error.message}`);
             return res.status(500).json({ status: 'error', message: 'Failed to optimize' });
@@ -92,7 +92,8 @@ app.post('/api/optimize', (req, res) => {
 
 app.post('/api/enable-temp', (req, res) => {
     const scriptPath = path.join(__dirname, 'start_temp.sh');
-    exec(`osascript -e 'do shell script "${scriptPath}" with administrator privileges'`, (error) => {
+    // Run script directly
+    exec(`bash "${scriptPath}"`, (error) => {
         if (error) {
             console.error(`Enable Temp error: ${error.message}`);
             return res.status(500).json({ status: 'error', message: 'Failed to enable temp sensor' });
