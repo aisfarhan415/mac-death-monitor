@@ -98,6 +98,28 @@ const fetchStats = async () => {
     }
 };
 
+document.getElementById('btn-optimize').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-optimize');
+    btn.innerText = '⚙️ OPTIMIZING...';
+    btn.style.pointerEvents = 'none';
+    
+    try {
+        const response = await fetch('/api/optimize', { method: 'POST' });
+        const result = await response.json();
+        if (result.status === 'success') {
+            btn.innerText = '✅ PURGED!';
+            setTimeout(() => {
+                btn.innerText = '🛠️ EMERGENCY OPTIMIZE';
+                btn.style.pointerEvents = 'auto';
+            }, 3000);
+        } else {
+            btn.innerText = '❌ FAILED';
+        }
+    } catch (error) {
+        btn.innerText = '❌ ERROR';
+    }
+});
+
 // Fetch every second
 setInterval(fetchStats, 1000);
 fetchStats();

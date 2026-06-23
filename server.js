@@ -2,6 +2,7 @@ import express from 'express';
 import si from 'systeminformation';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { exec } from 'child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -60,6 +61,17 @@ app.get('/api/stats', async (req, res) => {
     } catch (error) {
         res.status(500).json({ status: 'error', message: error.message });
     }
+});
+
+app.post('/api/optimize', (req, res) => {
+    // Run the 'purge' command to clear memory, and also tell the OS to free inactive memory
+    exec('purge', (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Purge error: ${error.message}`);
+            return res.status(500).json({ status: 'error', message: 'Failed to optimize' });
+        }
+        res.json({ status: 'success', message: 'Memory purged and optimized!' });
+    });
 });
 
 app.listen(PORT, () => {

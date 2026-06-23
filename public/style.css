@@ -187,3 +187,30 @@ header p {
 .status-good {
     color: var(--accent-green);
 }
+
+.btn-emergency {
+    margin-top: 15px;
+    background: rgba(255, 51, 51, 0.1);
+    color: var(--accent-red);
+    border: 1px solid var(--accent-red);
+    padding: 10px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px rgba(255, 51, 51, 0.2);
+}
+
+.btn-emergency:hover {
+    background: var(--accent-red);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(255, 51, 51, 0.6);
+    transform: scale(1.05);
+}
+
+.btn-emergency:active {
+    transform: scale(0.95);
+}
