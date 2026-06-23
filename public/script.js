@@ -45,7 +45,14 @@ const updateUI = (data) => {
 
     // CPU
     document.getElementById('val-cpu').innerText = `${data.cpu.load}%`;
-    document.getElementById('val-temp').innerText = data.cpu.temp > 0 ? `${data.cpu.temp}°C` : "Temp sensor N/A";
+    const btnTemp = document.getElementById('btn-temp');
+    if (data.cpu.temp > 0) {
+        document.getElementById('val-temp').innerText = `${data.cpu.temp}°C`;
+        if (btnTemp) btnTemp.style.display = 'none';
+    } else {
+        document.getElementById('val-temp').innerText = "Temp sensor N/A";
+        if (btnTemp) btnTemp.style.display = 'block';
+    }
     
     const cardCpu = document.getElementById('card-cpu');
     cardCpu.className = 'card';
@@ -119,6 +126,25 @@ document.getElementById('btn-optimize').addEventListener('click', async () => {
         btn.innerText = '❌ ERROR';
     }
 });
+
+const btnTemp = document.getElementById('btn-temp');
+if (btnTemp) {
+    btnTemp.addEventListener('click', async () => {
+        btnTemp.innerText = 'WAITING FOR TOUCH ID...';
+        btnTemp.style.pointerEvents = 'none';
+        try {
+            const response = await fetch('/api/enable-temp', { method: 'POST' });
+            const result = await response.json();
+            if (result.status === 'success') {
+                btnTemp.innerText = '✅ SENSOR ENABLED';
+            } else {
+                btnTemp.innerText = '❌ FAILED';
+            }
+        } catch (error) {
+            btnTemp.innerText = '❌ ERROR';
+        }
+    });
+}
 
 // Fetch every second
 setInterval(fetchStats, 1000);

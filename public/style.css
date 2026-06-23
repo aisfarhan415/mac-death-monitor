@@ -214,3 +214,23 @@ header p {
 .btn-emergency:active {
     transform: scale(0.95);
 }
+
+.btn-small {
+    margin-top: 10px;
+    background: transparent;
+    color: var(--accent-orange);
+    border: 1px solid var(--accent-orange);
+    padding: 5px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: bold;
+    font-size: 0.7rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+}
+
+.btn-small:hover {
+    background: var(--accent-orange);
+    color: #000;
+}
