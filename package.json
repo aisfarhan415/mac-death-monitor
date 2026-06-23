@@ -1,0 +1,14 @@
+{
+  "name": "mac-death-monitor",
+  "version": "1.0.0",
+  "description": "Dashboard showing the suffering state of a MacBook.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "systeminformation": "^5.23.0"
+  }
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MacBook Death Monitor</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="overlay" id="danger-overlay"></div>
+    <div class="container">
+        <header>
+            <h1>MacBook Death Monitor ☠️</h1>
+            <p>Real-time suffering metrics</p>
+        </header>
+
+        <section class="main-health">
+            <h2>System Health</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="health-fill"></div>
+            </div>
+            <p class="health-text" id="health-text">CRITICAL</p>
+        </section>
+
+        <section class="metrics-grid">
+            <div class="card" id="card-ram">
+                <h3>RAM Usage</h3>
+                <div class="value" id="val-ram">-- GB</div>
+                <div class="sub-value" id="val-ram-pct">--%</div>
+            </div>
+
+            <div class="card" id="card-swap">
+                <h3>Swap Memory</h3>
+                <div class="value" id="val-swap">-- GB</div>
+                <div class="sub-value warning" id="swap-warning">SSD is crying</div>
+            </div>
+
+            <div class="card" id="card-cpu">
+                <h3>CPU Load</h3>
+                <div class="value" id="val-cpu">-- %</div>
+                <div class="sub-value" id="val-temp">-- °C</div>
+            </div>
+
+            <div class="card" id="card-disk">
+                <h3>Disk Fullness</h3>
+                <div class="value" id="val-disk">-- %</div>
+                <div class="sub-value" id="val-disk-gb">-- GB Used</div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
