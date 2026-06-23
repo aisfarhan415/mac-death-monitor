@@ -91,14 +91,8 @@ app.post('/api/optimize', (req, res) => {
 });
 
 app.post('/api/enable-temp', (req, res) => {
-    const script = `
-        if pgrep -x "powermetrics" > /dev/null; then
-            exit 0
-        else
-            nohup powermetrics --samplers smc | awk '/CPU die temperature/ {print \\$0 > \\"/tmp/mactemp.txt\\"; fflush()}' > /dev/null 2>&1 &
-        fi
-    `;
-    exec(`osascript -e 'do shell script "${script.replace(/"/g, '\\"').replace(/\n/g, ' ')}" with administrator privileges'`, (error) => {
+    const scriptPath = path.join(__dirname, 'start_temp.sh');
+    exec(`osascript -e 'do shell script "${scriptPath}" with administrator privileges'`, (error) => {
         if (error) {
             console.error(`Enable Temp error: ${error.message}`);
             return res.status(500).json({ status: 'error', message: 'Failed to enable temp sensor' });
