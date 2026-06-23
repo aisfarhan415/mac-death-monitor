@@ -64,8 +64,8 @@ app.get('/api/stats', async (req, res) => {
 });
 
 app.post('/api/optimize', (req, res) => {
-    // Run the 'purge' command to clear memory, and also tell the OS to free inactive memory
-    exec('purge', (error, stdout, stderr) => {
+    // Run purge using AppleScript so it prompts the user for Touch ID / Password natively
+    exec('osascript -e \'do shell script "purge" with administrator privileges\'', (error, stdout, stderr) => {
         if (error) {
             console.error(`Purge error: ${error.message}`);
             return res.status(500).json({ status: 'error', message: 'Failed to optimize' });
