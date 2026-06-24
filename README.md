@@ -1,37 +1,32 @@
-# MacBook Death Monitor ☠️💻
+# mac-death-monitor 💀
 
-A highly premium, cinematic, hacker-style dashboard to monitor your MacBook's pain in real-time. Designed specifically to visualize intense system stress (RAM overloads, Swap memory spikes, and CPU bottlenecking) with an aggressive, glowing UI.
+just a weekend project to see how much my mac suffers when I open 100 chrome tabs and docker at the same time. it tracks ram, swap, cpu, and disk space. when it hits critical limits, the UI turns red and complains.
 
-## Features 🔥
+## what's inside
+there are two versions in this repo:
 
-- **Cinematic Glassmorphism UI:** Built with an obsidian black theme, glowing neon accents, and smooth blur effects.
-- **The Death Score:** A custom algorithm that calculates your Mac's suffering level based on CPU load, Swap usage, and Disk space.
-- **Emergency Optimize:** A one-click panic button that bypasses system prompts to execute a root-level `purge` command, instantly freeing up dirty RAM.
-- **Thermal Radar:** Reads the hidden CPU die temperature sensors natively on M-Series Macs using `powermetrics`.
+### 1. the web version
+a simple node.js backend that pulls system info and serves a dashboard. 
+how to run:
+```bash
+npm install
+npm start
+```
+then go to `http://localhost:3000`.
 
-## Two Flavors Available
+### 2. the native mac app (swiftui)
+inside the `NativeApp` folder, there's a native swiftui version if you prefer it running outside the browser. it uses standard mac kernel calls to get stats.
+how to build:
+```bash
+cd NativeApp
+./build.sh
+```
+then just open the `MacDeathMonitor.app`.
 
-This project comes in two versions depending on your preference:
+## disclaimer / warning
+the "emergency optimize" button runs `sudo purge` and the temp sensor uses `sudo powermetrics`. if you don't wanna type your password every time, you gotta bypass sudo for those commands in `/etc/sudoers.d/`.
 
-### 1. Web Dashboard (Node.js + Vanilla JS)
-A lightweight web server that exposes system metrics via an API and serves a beautifully styled web frontend.
-- **Tech Stack:** Node.js, Express, `systeminformation`, HTML/CSS/JS.
-- **How to run:**
-  ```bash
-  npm install
-  npm start
-  ```
-- **Access:** Open `http://localhost:3000` in your browser.
+do it at your own risk lol.
 
-### 2. Native macOS App (SwiftUI)
-A 100% native Apple application built with Swift and SwiftUI. It uses `NSVisualEffectView` for true system-level glassmorphism and executes kernel metrics natively.
-- **Tech Stack:** Swift, SwiftUI, AppKit, Darwin/Foundation.
-- **How to build:** Run the included `build.sh` script to compile the standalone `.app` bundle natively.
-
-## Security Warning ⚠️
-The "Emergency Optimize" and "Thermal Sensor" features execute `sudo purge` and `sudo powermetrics` under the hood. For the seamless 1-click experience, this repository assumes you have added a `NOPASSWD` rule for these commands in your `/etc/sudoers.d/` configuration. 
-
-**Use at your own risk.**
-
-## License
-MIT License. Do whatever you want with it, but don't blame me if your Mac actually dies! 🤣
+## license
+mit.
